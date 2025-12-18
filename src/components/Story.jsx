@@ -16,17 +16,18 @@ const photos = [
 
 export default function Story() {
   return (
-    <section className="bg-black py-20 md:py-40 px-6">
-      <div className="max-w-2xl mx-auto space-y-40 md:space-y-64">
+    <section className="bg-black py-12 sm:py-20 md:py-32 lg:py-40 px-4 sm:px-6 md:px-8">
+      <div className="max-w-2xl mx-auto space-y-20 sm:space-y-32 md:space-y-48 lg:space-y-64">
         {messages.map((text, index) => (
           <motion.div
             key={index}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-20%" }}
-            className="text-center"
+            transition={{ duration: 0.8 }}
+            className="text-center px-2"
           >
-            <p className="text-xl md:text-4xl font-light leading-relaxed text-slate-300 italic font-serif">
+            <p className="text-base sm:text-lg md:text-2xl lg:text-3xl xl:text-4xl font-light leading-relaxed sm:leading-relaxed md:leading-loose text-slate-300 italic font-serif">
               "{text}"
             </p>
           </motion.div>
@@ -34,14 +35,16 @@ export default function Story() {
       </div>
 
       {/* Grid Foto yang Responsif */}
-      <div className="max-w-6xl mx-auto mt-40 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+      <div className="max-w-6xl mx-auto mt-20 sm:mt-32 md:mt-40 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
         {photos.map((photo, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className={`relative rounded-3xl overflow-hidden border border-slate-800 
-              ${photo.size === 'tall' ? 'md:row-span-2 h-[350px] md:h-[600px]' : 'h-[250px] md:h-[290px]'}`}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+            className={`relative rounded-2xl sm:rounded-3xl overflow-hidden border border-slate-800 
+              ${photo.size === 'tall' ? 'lg:row-span-2 h-[280px] sm:h-[350px] lg:h-[600px]' : 'h-[200px] sm:h-[250px] lg:h-[290px]'}`}
           >
             <img src={photo.url} className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" alt="Memory" />
           </motion.div>
