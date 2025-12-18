@@ -16,37 +16,34 @@ const photos = [
 
 export default function Story() {
   return (
-    <section className="bg-black py-20 px-6">
-      {/* Pesan Teks (seperti sebelumnya) */}
-      <div className="max-w-lg mx-auto space-y-32">
+    <section className="bg-black py-20 md:py-40 px-6">
+      <div className="max-w-2xl mx-auto space-y-40 md:space-y-64">
         {messages.map((text, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 1, delay: 0.2 }}
+            viewport={{ once: true, margin: "-20%" }}
             className="text-center"
           >
-            <p className="text-2xl md:text-3xl font-light leading-relaxed text-slate-300 italic">
+            <p className="text-xl md:text-4xl font-light leading-relaxed text-slate-300 italic font-serif">
               "{text}"
             </p>
           </motion.div>
         ))}
       </div>
-      {/* Photo Grid */}
-      <div className="max-w-4xl mx-auto mt-40 grid grid-cols-2 md:grid-cols-4 gap-4">
+
+      {/* Grid Foto yang Responsif */}
+      <div className="max-w-6xl mx-auto mt-40 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
         {photos.map((photo, i) => (
           <motion.div
             key={i}
-            whileHover={{ scale: 0.98 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className={`relative rounded-2xl overflow-hidden border border-slate-800 
-              ${photo.size === 'tall' ? 'row-span-2 h-[400px]' : 'h-[190px]'}`}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className={`relative rounded-3xl overflow-hidden border border-slate-800 
+              ${photo.size === 'tall' ? 'md:row-span-2 h-[350px] md:h-[600px]' : 'h-[250px] md:h-[290px]'}`}
           >
-            <img src={photo.url} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Memory" />
+            <img src={photo.url} className="w-full h-full object-cover transition-transform duration-700 hover:scale-110" alt="Memory" />
           </motion.div>
         ))}
       </div>

@@ -6,10 +6,8 @@
     --color-gold-500: #eab308;
 }
 
-body {
-    font-family: var(--font-sans);
-    background-color: black;
-    color: white;
+html {
+    scroll-behavior: smooth;
 }
 
 :root {
@@ -41,11 +39,16 @@ body {
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
+    font-family: var(--font-sans);
+    background-color: black;
+    color: white;
 }
 
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 button {

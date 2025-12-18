@@ -45,7 +45,7 @@ export default function GiftSection() {
               <button onClick={() => setShowQR(false)} className="absolute top-4 right-4 text-slate-400"><X /></button>
               <Sparkles className="mx-auto text-yellow-500 mb-2" />
               <h3 className="text-2xl font-bold text-slate-900 mb-2">Scan untuk Klaim</h3>
-              <p className="text-slate-500 text-sm mb-6">Minta si Pemberi scan QR ini dengan kamera HP mereka.</p>
+              <p className="text-slate-500 text-sm mb-6">Minta si Nanda untuk scan QR ini dengan kamera HP dia.</p>
               
               <div className="bg-slate-100 p-4 rounded-2xl inline-block border-2 border-slate-200">
                 {/* QR Code sekarang berisi URL Klaim */}
