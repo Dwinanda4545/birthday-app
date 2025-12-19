@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Scanner } from '@yudiel/react-qr-scanner'; // Import scanner asli
 import { motion, AnimatePresence } from 'framer-motion';
 import { ShieldCheck, ShieldAlert, RefreshCw, Camera } from 'lucide-react';
@@ -6,9 +6,50 @@ import { ShieldCheck, ShieldAlert, RefreshCw, Camera } from 'lucide-react';
 export default function GifterScanner({ forceSuccess = false }) {
   const [status, setStatus] = useState(forceSuccess ? 'success' : 'idle');
   const [errorMsg, setErrorMsg] = useState("");
+  const [scannerKey, setScannerKey] = useState(0); // Key untuk force re-mount scanner
+
+  // Cleanup: Stop scanner dan video stream saat component unmount
+  useEffect(() => {
+    return () => {
+      // Get all video elements dan stop streams
+      const videoElements = document.querySelectorAll('video');
+      videoElements.forEach(video => {
+        if (video.srcObject) {
+          const stream = video.srcObject;
+          const tracks = stream.getTracks();
+          tracks.forEach(track => {
+            track.stop();
+          });
+          video.srcObject = null;
+        }
+      });
+    };
+  }, []);
+
+  // Stop scanner saat status berubah ke success untuk free up resources
+  useEffect(() => {
+    if (status === 'success') {
+      // Delay untuk memastikan AnimatePresence selesai
+      const timer = setTimeout(() => {
+        const videoElements = document.querySelectorAll('video');
+        videoElements.forEach(video => {
+          if (video.srcObject) {
+            const stream = video.srcObject;
+            const tracks = stream.getTracks();
+            tracks.forEach(track => {
+              track.stop();
+            });
+            video.srcObject = null;
+          }
+        });
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
 
   const handleScan = (result) => {
-    if (result) {
+    if (result && status !== 'success') { // Prevent multiple scans
       const scannedText = result[0].rawValue; 
   
       // VALIDASI: Apakah teks yang di-scan mengandung kunci rahasia kita?
@@ -27,6 +68,8 @@ export default function GifterScanner({ forceSuccess = false }) {
   const reset = () => {
     setStatus('idle');
     setErrorMsg("");
+    // Force re-mount scanner dengan key baru untuk cleanup stream lama
+    setScannerKey(prev => prev + 1);
   };
 
   return (
@@ -41,10 +84,29 @@ export default function GifterScanner({ forceSuccess = false }) {
 
             {/* Kamera Aktif - Responsive size */}
             <div className="relative w-64 h-64 sm:w-72 sm:h-72 md:w-80 md:h-80 border-2 border-indigo-500 rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_0_30px_rgba(79,70,229,0.3)]">
+              {/* Scanner dengan key untuk force re-mount dan cleanup */}
               <Scanner
+                key={scannerKey}
                 onScan={handleScan}
                 onError={(error) => console.log(error?.message)}
-                constraints={{ facingMode: 'environment' }} // Menggunakan kamera belakang HP
+                paused={status === 'success'} // Pause scanner saat success
+                constraints={{ 
+                  facingMode: 'environment',
+                  aspectRatio: 1
+                }}
+                styles={{
+                  container: { 
+                    width: '100%', 
+                    height: '100%' 
+                  },
+                  video: { 
+                    objectFit: 'cover',
+                    width: '100%',
+                    height: '100%'
+                  }
+                }}
+                formats={['qr_code']} // Hanya scan QR code untuk performa lebih baik
+                scanDelay={500} // Delay 500ms antar scan untuk reduce CPU usage
               />
               
               {/* Animasi Garis Laser */}
