@@ -2,19 +2,51 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 import { Gift, Sparkles, X } from 'lucide-react';
+import InteractiveGame from './InteractiveGame';
 
 export default function GiftSection() {
+  const [showGame, setShowGame] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("");
+  const [gameCompleted, setGameCompleted] = useState(false);
 
-    useEffect(() => {
+  useEffect(() => {
     const url = new URL(window.location.href);
     url.searchParams.set('role', 'pemberi');
     url.searchParams.set('status', 'claimed');
     // Kita sisipkan kunci rahasia di dalam URL agar jika di-scan manual pun tetap valid
     url.searchParams.set('key', 'GIFT-VERIFIED-AYU-24-2025'); 
     setCurrentUrl(url.toString());
+
+    // Cek apakah game sudah pernah diselesaikan
+    const completed = localStorage.getItem('balloon-game-completed') === 'true';
+    setGameCompleted(completed);
   }, []);   
+
+  // Handler ketika user klik tombol dapatkan hadiah
+  const handleGetGift = () => {
+    // Jika game sudah pernah selesai, langsung tampilkan QR
+    if (gameCompleted) {
+      setShowQR(true);
+    } else {
+      // Jika belum, tampilkan game dulu
+      setShowGame(true);
+    }
+  };
+
+  // Handler ketika game selesai
+  const handleGameComplete = () => {
+    // Simpan status completion ke localStorage
+    localStorage.setItem('balloon-game-completed', 'true');
+    setGameCompleted(true);
+    setShowGame(false);
+    setShowQR(true);
+  };
+
+  // Jika game sedang aktif, tampilkan full screen game
+  if (showGame) {
+    return <InteractiveGame onComplete={handleGameComplete} />;
+  }
 
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-black p-4 sm:p-6 md:p-8">
@@ -26,7 +58,7 @@ export default function GiftSection() {
         <Gift size={60} className="mx-auto text-indigo-500 mb-4 sm:mb-6 sm:w-20 sm:h-20" />
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-white">Hadiah Spesial</h2>
         <button 
-          onClick={() => setShowQR(true)}
+          onClick={handleGetGift}
           className="px-6 sm:px-8 py-3 sm:py-4 bg-indigo-600 hover:bg-indigo-500 text-white text-sm sm:text-base rounded-full font-bold transition-all shadow-[0_0_30px_rgba(79,70,229,0.5)] w-full sm:w-auto"
         >
           Dapatkan Link Klaim
@@ -62,7 +94,7 @@ export default function GiftSection() {
                 />
               </div>
               <p className="mt-3 sm:mt-4 text-[9px] sm:text-[10px] text-indigo-600 font-bold break-all px-2">
-                {currentUrl}
+                Jangan lupa untuk klaim hadiah ke Nanda ya!
               </p>
             </motion.div>
           </motion.div>
