@@ -9,10 +9,10 @@ const messages = [
 ];
 
 const photos = [
-    { url: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=500", size: "tall" },
-    { url: "https://images.unsplash.com/photo-1496412705862-e0088f16f791?w=500", size: "short" },
-    { url: "https://images.unsplash.com/photo-1530103862676-fa8c91bbe34b?w=500", size: "short" },
-    { url: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=500", size: "tall" },
+  { url: "/images/IMG_20250720_194301.jpg", size: "tall" },
+  { url: "/images/IMG_20250803_144111.jpg", size: "tall" },
+  { url: "/images/IMG_20251025_183004.jpg", size: "tall" },
+  { url: "/images/IMG_20251214_212924.jpg", size: "tall" },
 ];
 
 export default function Story() {
